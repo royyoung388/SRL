@@ -1,0 +1,14 @@
+1. word 大小写
+2. subword 英文等
+3. 半型及全型形式 Unicode字符 a:ff41
+4. vocab 覆盖率，时间
+
+subword
+根据BIO标签结果，提出解码约束算法或者强约束条件，如CRF。
+POS输入
+无谓语预测
+多谓语预测
+一次性全预测
+ELMO – pretrained embedding
+字符集embedding
+语法含义输入
