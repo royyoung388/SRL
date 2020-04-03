@@ -15,7 +15,7 @@ relu_dropout = 0.1
 # train
 # subprocesses to use for data loading. = cpu counts
 num_workers = 16
-batch_size = 4096
+batch_size = 2048
 
 # dimensions
 # feature_dim * 2 = model_dim
