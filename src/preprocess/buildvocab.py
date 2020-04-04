@@ -10,7 +10,7 @@ class BuildVocab(object):
         self.out_path = out_path
         self.char_path = char_path
 
-    def count(self, data_path, limit=0, split=False):
+    def count(self, data_path, limit=0):
         counter = collections.Counter()
         char = collections.Counter()
 
@@ -19,17 +19,13 @@ class BuildVocab(object):
                 parts = line.strip().split()
                 counter.update(parts)
 
-        if split:
-            for label in list(counter.keys()):
-                counter.update([self.split_label(label)])
-
         vocab = []
         for key, value in counter.items():
             if value >= limit:
                 vocab.append(key)
             elif self.char_path is not None:
                 char.update([k for k in key])
-        return vocab, len(counter), char.keys()
+        return vocab, len(counter), list(char.keys())
 
     def split_label(self, label: str):
         parts = label.split('-')
@@ -43,13 +39,13 @@ class BuildVocab(object):
                 f.write(v)
                 f.write('\n')
 
-    def build(self, special=None, limit=None, split=False):
+    def build(self, special=None, limit=None):
         print('build vocab: ' + self.data_path)
         start = time.time()
         if special is None:
             special = list()
 
-        vocab, size, char = self.count(self.data_path, limit, split)
+        vocab, size, char = self.count(self.data_path, limit)
         vocab = special.copy() + vocab
 
         self.save_file(self.out_path, vocab)
@@ -70,8 +66,6 @@ def parse_args():
     parser.add_argument("--limit", default=0, type=int, help=msg)
     msg = "add special token, separated by colon"
     parser.add_argument("--special", default=None, help=msg)
-    msg = "split label"
-    parser.add_argument("--split", action='store_true', help=msg)
     msg = "path to save character level embedding"
     parser.add_argument("--char", default=None, help=msg)
 
@@ -84,7 +78,7 @@ if __name__ == '__main__':
     if special is not None:
         special = [s for s in special.strip().split(':')]
     build = BuildVocab(args.input, args.output, args.char)
-    build.build(special, args.limit, args.split)
+    build.build(special, args.limit)
 
 # if __name__ == '__main__':
 #     build = BuildVocab('data/train/label.txt', 'data/train/label_vocab.txt')
