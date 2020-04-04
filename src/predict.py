@@ -42,7 +42,7 @@ class Predictor(object):
 
     def predict(self, save_path):
         self.model.eval()
-        with torch.no_grad(),:
+        with torch.no_grad():
             y_pred = []
             y_true = []
             for step, (xs, preds, ys, lengths) in enumerate(self.dataLoader):
@@ -85,5 +85,5 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
-    predictor = Predictor(args.modle, args.word_vocab, args.label_vocab, args.word, args.label)
+    predictor = Predictor(args.model, args.word_vocab, args.label_vocab, args.word, args.label)
     predictor.predict(args.output)
