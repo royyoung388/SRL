@@ -16,8 +16,8 @@ class SubWord(object):
         words = SubWord.strB2Q(words)
 
         # 只针对非中文, only for not chinese string
-        if SubWord.is_cn(words):
-            return words
+        # if SubWord.is_cn(words):
+        #     return words
 
         if '年' in words and SubWord.has_num(words):
             return '_YEAR'
@@ -31,7 +31,7 @@ class SubWord(object):
         if ('分之' in words or '%' in words) and SubWord.has_num(words):
             return '_PERCENT'
 
-        if 'www' in words or 'http:' in words:
+        if 'www.' in words or 'http:' in words:
             return '_NET'
 
         if ('·' in words or '.' in words or '*' in words) and len(words) > 1 and not SubWord.has_num(
@@ -51,14 +51,8 @@ class SubWord(object):
         if ('时' in words or '分' in words) and SubWord.has_num(words):
             return '_TIME'
 
-        if ('百' in words or '千' in words or '万' in words or '亿' in words or '兆') and SubWord.has_num(words):
+        if ('百' in words or '千' in words or '万' in words or '亿' in words or '兆' in words) and SubWord.has_num(words):
             return '_NUMBER'
-
-        # if words.find('点') != -1:
-        #     if words.find("一") != -1 or words.find("二") != -1 or words.find("三") != -1 or words.find("四") != -1 or \
-        #             words.find("五") != -1 or words.find("六") != -1 or words.find("七") != -1 or \
-        #             words.find("八") != -1 or words.find("九") != -1 or words.find("十") != -1:
-        #         return '_NUMBER'
 
         if SubWord.is_eng(words):
             return '_ENG'
