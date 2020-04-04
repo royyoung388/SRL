@@ -15,15 +15,16 @@ class Predictor(object):
     def __init__(self, model, word_vocab, label_vocab, word, label):
         # load vocab
         self.word_vocab = Vocab(word_vocab)
-        word_vocab.unk_id = word_vocab.toID(UNK)
         self.label_vocab = Vocab(label_vocab)
-        config.WORD_PAD_ID = word_vocab.toID(PAD)
-        config.WORD_UNK_ID = word_vocab.toID(UNK)
-        config.LABEL_PAD_ID = label_vocab.toID(PAD)
-        pred_id = [label_vocab.toID('B-v'), label_vocab.toID('I-v')]
+
+        self.word_vocab.unk_id = self.word_vocab.toID(UNK)
+        config.WORD_PAD_ID = self.word_vocab.toID(PAD)
+        config.WORD_UNK_ID = self.word_vocab.toID(UNK)
+        config.LABEL_PAD_ID = self.label_vocab.toID(PAD)
+        pred_id = [self.label_vocab.toID('B-v'), self.label_vocab.toID('I-v')]
 
         # load data
-        dataset = DataReader(word, label, word_vocab, label_vocab)
+        dataset = DataReader(word, label, self.word_vocab, self.label_vocab)
         self.dataLoader = DataLoader(dataset=dataset,
                                      batch_size=batch_size,
                                      num_workers=num_workers,
@@ -31,7 +32,7 @@ class Predictor(object):
                                      shuffle=False,
                                      collate_fn=Collate(pred_id, WORD_PAD_ID, LABEL_PAD_ID, False))
 
-        self.model = DeepAttn(word_vocab.size(), label_vocab.size(), feature_dim, model_dim, filter_dim)
+        self.model = DeepAttn(self.word_vocab.size(), self.label_vocab.size(), feature_dim, model_dim, filter_dim)
         self.model.load_state_dict(torch.load(model))
 
     def save(self, path, labels):
