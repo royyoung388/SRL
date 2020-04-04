@@ -33,6 +33,7 @@ class Process_conll2012(object):
                     continue
 
                 if len(line) <= 0:
+                    # end of a sentence
                     if len(word) > 0:
                         label_num = len(label[0])
                         # don't have labels
@@ -63,23 +64,44 @@ class Process_conll2012(object):
                 label.append(parts[11:-1])
         return sentences
 
+    def process_label(self, label: str):
+        """
+        process for special label
+        :param label:
+        :return:
+        """
+        if label.startswith('c-') or label.startswith('r-'):
+            return label[2:]
+        elif label.startswith('rel-'):
+            return label[:3]
+        return label
+
     def convert2BIO(self, label):
+        """
+
+        :param label: list of list
+        :return:
+        """
         bio = []
         for t in label:
             item = []
             flag = '*'
+            tag = self.process_label
 
             for i in t:
                 if i.startswith('('):
-                    flag = i[1:-2]
-                    item.append('B-' + flag)
+                    if i.endswith(')'):
+                        item.append('B-' + tag(i[1:-2]))
+                    else:
+                        flag = i[1:-1]
+                        item.append('B-' + tag(flag))
                 elif i == '*':
                     if flag == '*':
                         item.append('O')
                     else:
-                        item.append('I-' + flag)
+                        item.append('I-' + tag(flag))
                 elif i == '*)':
-                    item.append('B-' + flag)
+                    item.append('B-' + tag(flag))
                     flag = '*'
                 else:
                     print('unexpected label: ' + i)

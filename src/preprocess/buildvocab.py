@@ -5,12 +5,14 @@ from typing import List
 
 
 class BuildVocab(object):
-    def __init__(self, data_path, out_path):
+    def __init__(self, data_path, out_path, char_path):
         self.data_path = data_path
         self.out_path = out_path
+        self.char_path = char_path
 
     def count(self, data_path, limit=0, split=False):
         counter = collections.Counter()
+        char = collections.Counter()
 
         with open(data_path, 'r', encoding='utf-8') as f:
             for line in f:
@@ -25,7 +27,9 @@ class BuildVocab(object):
         for key, value in counter.items():
             if value >= limit:
                 vocab.append(key)
-        return vocab, len(counter)
+            elif self.char_path is not None:
+                char.update([k for k in key])
+        return vocab, len(counter), char.keys()
 
     def split_label(self, label: str):
         parts = label.split('-')
@@ -40,14 +44,17 @@ class BuildVocab(object):
                 f.write('\n')
 
     def build(self, special=None, limit=None, split=False):
-        start = time.time()
         print('build vocab: ' + self.data_path)
+        start = time.time()
         if special is None:
             special = list()
-        vocab, size = self.count(self.data_path, limit, split)
-        vocab = special.copy() + vocab
-        self.save_file(self.out_path, vocab)
 
+        vocab, size, char = self.count(self.data_path, limit, split)
+        vocab = special.copy() + vocab
+
+        self.save_file(self.out_path, vocab)
+        if self.char_path is not None:
+            self.save_file(self.char_path, char)
         print('finish vocab, coverage: %.2f%%' % ((len(vocab) - len(special)) / size * 100))
 
 
@@ -65,6 +72,8 @@ def parse_args():
     parser.add_argument("--special", default=None, help=msg)
     msg = "split label"
     parser.add_argument("--split", action='store_true', help=msg)
+    msg = "path to save character level embedding"
+    parser.add_argument("--char", default=None, help=msg)
 
     return parser.parse_args()
 
@@ -74,7 +83,7 @@ if __name__ == '__main__':
     special = args.special
     if special is not None:
         special = [s for s in special.strip().split(':')]
-    build = BuildVocab(args.input, args.output)
+    build = BuildVocab(args.input, args.output, args.char)
     build.build(special, args.limit, args.split)
 
 # if __name__ == '__main__':

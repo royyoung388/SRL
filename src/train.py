@@ -1,14 +1,12 @@
 import argparse
 import os
-import sys
 import time
 
 import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 
-sys.path.append('..')
-
+import config
 from config import *
 from dataset.datareader import DataReader, Collate
 from dataset.vocab import Vocab
@@ -56,9 +54,9 @@ if __name__ == '__main__':
     word_vocab = Vocab(args.word_vocab)
     word_vocab.unk_id = word_vocab.toID(UNK)
     label_vocab = Vocab(args.label_vocab)
-    WORD_PAD_ID = word_vocab.toID(PAD)
-    WORD_UNK_ID = word_vocab.toID(UNK)
-    LABEL_PAD_ID = label_vocab.toID(PAD)
+    config.WORD_PAD_ID = word_vocab.toID(PAD)
+    config.WORD_UNK_ID = word_vocab.toID(UNK)
+    config.LABEL_PAD_ID = label_vocab.toID(PAD)
     pred_id = [label_vocab.toID('B-v'), label_vocab.toID('I-v')]
 
     # load data

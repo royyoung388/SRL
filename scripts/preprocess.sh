@@ -16,6 +16,6 @@ python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 
 python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 $ROOTPATH/data/dev/word.txt $ROOTPATH/data/dev/word_vocab.txt
 python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 $ROOTPATH/data/test/word.txt $ROOTPATH/data/test/word_vocab.txt
 
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" --split $ROOTPATH/data/train/label.txt $ROOTPATH/data/train/label_vocab.txt
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" --split $ROOTPATH/data/dev/label.txt $ROOTPATH/data/dev/label_vocab.txt
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" --split $ROOTPATH/data/test/label.txt $ROOTPATH/data/test/label_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>"  $ROOTPATH/data/train/label.txt $ROOTPATH/data/train/label_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" $ROOTPATH/data/dev/label.txt $ROOTPATH/data/dev/label_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>"  $ROOTPATH/data/test/label.txt $ROOTPATH/data/test/label_vocab.txt

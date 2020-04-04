@@ -15,6 +15,10 @@ class SubWord(object):
     def subword(words):
         words = SubWord.strB2Q(words)
 
+        # 只针对非中文, only for not chinese string
+        if SubWord.is_cn(words):
+            return words
+
         if '年' in words and SubWord.has_num(words):
             return '_YEAR'
 
