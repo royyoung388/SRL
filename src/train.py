@@ -57,7 +57,7 @@ if __name__ == '__main__':
     config.WORD_PAD_ID = word_vocab.toID(PAD)
     config.WORD_UNK_ID = word_vocab.toID(UNK)
     config.LABEL_PAD_ID = label_vocab.toID(PAD)
-    pred_id = [label_vocab.toID('B-v'), label_vocab.toID('I-v')]
+    pred_id = [label_vocab.toID('B-v')]
 
     # load data
     dataset = DataReader(args.word, args.label, word_vocab, label_vocab)
