@@ -6,7 +6,7 @@ class SubWord(object):
             code = ord(w)
             if code == 0x3000:
                 code = 0x20
-            elif (code >= 0xFF01 and code <= 0xFF5E):
+            elif 0xFF01 <= code <= 0xFF5E:
                 code -= 0xFEE0
             s.append(chr(code))
         return ''.join(s)
@@ -77,8 +77,8 @@ class SubWord(object):
     @staticmethod
     def is_eng(words):
         for w in words:
-            if (w >= '\uFF21' and w <= '\uFF3A') or (w >= '\uFF41' and w <= '\uFF5A') \
-                    or (w >= u'\u0041' and w <= u'\u005a') or (w >= u'\u0061' and w <= u'\u007a'):
+            if ('\uFF21' <= w <= '\uFF3A') or ('\uFF41' <= w <= '\uFF5A') \
+                    or (u'\u0041' <= w <= u'\u005a') or (u'\u0061' <= w <= u'\u007a'):
                 continue
             else:
                 return False
