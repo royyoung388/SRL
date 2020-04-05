@@ -1,17 +1,16 @@
-- [x] word 大小写
 - [x] 半型及全型形式 Unicode字符 a:ff41
 - [x] subword 英文等
 - [x] 计算F1. seqeval 
 - [x] vocab 覆盖率，时间
-- [ ] 根据BIO标签结果，提出解码约束算法或者强约束条件，如CRF。(BIO不需要强约束，OIO是允许的)
-- [ ] POS输入。
+- [x] 根据BIO标签结果，提出解码约束算法或者强约束条件，如CRF。(BIO不需要强约束，OIO是允许的)
+- [ ] POS输入。依赖信息少比较好？
 - [ ] 无谓语预测
 - [ ] 多谓语预测
 - [ ] 一次性全预测
-- [x] ELMO / pretrained embedding
-- [ ] 字符级embedding
+- [x] ELMO / pre-trained embedding
+- [ ] 解决oov问题。目前只有70%。字符级embedding，word piece和pre-trained mebedding(fasttext)
 - [ ] 语法含义输入
-- [ ] 标签细分问题
+- [x] 标签细分问题
 
 ![label](label.jpg)  
 • EXT - extent  
@@ -22,7 +21,7 @@
 • PRD - predication  
 • NEG - negation  
 • MOD - modal  
-• ADV - adverbial  
+• ADV - adverbial   
 • MNR - manner  
 • CAU - cause  
 • PNC - purpose not cause.  

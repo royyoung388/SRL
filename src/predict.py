@@ -21,7 +21,7 @@ class Predictor(object):
         config.WORD_PAD_ID = self.word_vocab.toID(PAD)
         config.WORD_UNK_ID = self.word_vocab.toID(UNK)
         config.LABEL_PAD_ID = self.label_vocab.toID(PAD)
-        pred_id = [self.label_vocab.toID('B-v'), self.label_vocab.toID('I-v')]
+        pred_id = [self.label_vocab.toID('B-v')]
 
         # load data
         dataset = DataReader(word, label, self.word_vocab, self.label_vocab)
@@ -69,7 +69,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=msg)
 
     msg = "model path"
-    parser.add_argument("--model", default='result/30/model.pt', help=msg)
+    parser.add_argument("--model", default='result/28/model.pt', help=msg)
     msg = 'word vocab path'
     parser.add_argument("--word_vocab", default='data/train/word_vocab.txt', help=msg)
     msg = 'label vocab path'
