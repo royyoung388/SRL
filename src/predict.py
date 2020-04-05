@@ -1,4 +1,5 @@
 import argparse
+import time
 
 import torch
 from seqeval.metrics import *
@@ -42,20 +43,28 @@ class Predictor(object):
                 f.write('\n')
 
     def predict(self, save_path):
+        start = time.time()
+        print('start predict')
+
         self.model.eval()
         with torch.no_grad():
             y_pred = []
             y_true = []
             for step, (xs, preds, ys, lengths) in enumerate(self.dataLoader):
-                y_true.extend(ys.squeeze().tolist())
+                y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab))
 
                 labels = self.model.argmax_decode(xs, preds)
                 labels = convert_to_string(labels.squeeze().tolist(), self.label_vocab)
                 y_pred.extend(labels)
 
+                print('predict step: %d, time: %.2f M' % (step, (time.time() - start) / 60))
+                print('current F1 score: %.2f' % f1_score(y_true, y_pred))
+
             self.save(save_path, y_pred)
 
-            score = f1_score(ys, labels)
+            score = f1_score(y_true, y_pred)
+
+            print('finish predict: %.2f' % ((time.time() - start) / 60))
             print('F1 score: %.2f' % score)
             return score
 
