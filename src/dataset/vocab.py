@@ -30,6 +30,7 @@ class Vocab(object):
 
     def look_up(self, key, dict):
         if key not in dict:
+            # print(key)
             assert self.unk_id is not None
             return self.unk_id
         else:

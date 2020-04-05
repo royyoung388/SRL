@@ -43,12 +43,21 @@ def compare_label(path1, path2):
     print(counter2 - counter1)
 
 
+def compare_length(path1, path2):
+    with open(path1, 'r', encoding='utf-8') as f1, open(path2, 'r', encoding='utf-8') as f2:
+        for line1, line2 in zip(f1, f2):
+            len1 = len(line1.strip().split())
+            len2 = len(line2.strip().split())
+            print(len1 - len2)
+
+
 if __name__ == '__main__':
     # read('train/word_vocab.txt')
     # read('dev/word_vocab.txt')
     # read('test/word_vocab.txt')
-    # find('R-ARG0', 'E:/SRL/conll-2012/v4/data/train/data/chinese')
+    # find('阿吉兹', 'E:/SRL/conll-2012/v4/data/train/data/chinese')
     # find('rel', 'E:/SRL/conll-2012/v4/data/development/data/chinese')
     # find('rel', 'E:/SRL/conll-2012/v9/data/test/data/chinese')
-    compare_label('train/label_vocab.txt', 'test/label_vocab.txt')
-    compare_label('train/label_vocab.txt', 'dev/label_vocab.txt')
+    # compare_label('train/label_vocab.txt', 'test/label_vocab.txt')
+    # compare_label('train/label_vocab.txt', 'dev/label_vocab.txt')
+    compare_length('dev/label.txt', 'dev/label_out.txt')

@@ -66,7 +66,7 @@ class DeepAttn(nn.Module):
 
     def forward(self, words, preds, labels):
         """
-        :param words: word ids after pad. (batch * seq_len)
+        :param words: word ids 0after pad. (batch * seq_len)
         :param preds: predicate mask. 1(is predicate) / 0(not predicate)
         :param labels: label ids after pad. (batch * seq_len)
         :return:

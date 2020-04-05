@@ -39,7 +39,7 @@ class BuildVocab(object):
                 f.write(v)
                 f.write('\n')
 
-    def build(self, special=None, limit=None):
+    def build(self, special=None, limit=0):
         print('build vocab: ' + self.data_path)
         start = time.time()
         if special is None:

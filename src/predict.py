@@ -19,6 +19,8 @@ class Predictor(object):
         self.label_vocab = Vocab(label_vocab)
 
         self.word_vocab.unk_id = self.word_vocab.toID(UNK)
+        # todo just for test
+        self.label_vocab.unk_id = 1
         config.WORD_PAD_ID = self.word_vocab.toID(PAD)
         config.WORD_UNK_ID = self.word_vocab.toID(UNK)
         config.LABEL_PAD_ID = self.label_vocab.toID(PAD)
@@ -51,10 +53,10 @@ class Predictor(object):
             y_pred = []
             y_true = []
             for step, (xs, preds, ys, lengths) in enumerate(self.dataLoader):
-                y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab))
+                y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab, lengths))
 
                 labels = self.model.argmax_decode(xs, preds)
-                labels = convert_to_string(labels.squeeze().tolist(), self.label_vocab)
+                labels = convert_to_string(labels.squeeze().tolist(), self.label_vocab, lengths)
                 y_pred.extend(labels)
 
                 print('predict step: %d, time: %.2f M' % (step, (time.time() - start) / 60))
@@ -69,8 +71,18 @@ class Predictor(object):
             return score
 
 
-def convert_to_string(labels, label_vocab: Vocab):
-    return [label_vocab.toToken(label) for label in labels]
+def convert_to_string(labels, label_vocab: Vocab, lengths: torch.Tensor):
+    """
+
+    :param labels: (batch * seq)
+    :param label_vocab:
+    :param lengths: IntTensor. batch size
+    :return:
+    """
+    result = []
+    for label, length in zip(labels, lengths):
+        result.append(label_vocab.toToken(label)[:length])
+    return result
 
 
 def parse_args():
@@ -78,17 +90,17 @@ def parse_args():
     parser = argparse.ArgumentParser(description=msg)
 
     msg = "model path"
-    parser.add_argument("--model", default='result/28/model.pt', help=msg)
+    parser.add_argument("--model", default='result/3/model.pt', help=msg)
     msg = 'word vocab path'
     parser.add_argument("--word_vocab", default='data/train/word_vocab.txt', help=msg)
     msg = 'label vocab path'
     parser.add_argument("--label_vocab", default='data/train/label_vocab.txt', help=msg)
     msg = 'word path'
-    parser.add_argument("--word", default='data/test/word.txt', help=msg)
+    parser.add_argument("--word", default='data/dev/word.txt', help=msg)
     msg = 'label path'
-    parser.add_argument("--label", default='data/test/label.txt', help=msg)
+    parser.add_argument("--label", default='data/dev/label.txt', help=msg)
     msg = 'label output path'
-    parser.add_argument("--output", default='data/test/label_out.txt', help=msg)
+    parser.add_argument("--output", default='data/dev/label_out.txt', help=msg)
     return parser.parse_args()
 
 

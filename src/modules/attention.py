@@ -72,7 +72,7 @@ class MultiHeadAttention(nn.Module):
         """
         if attn_mask is not None:
             # Same mask applied to all h heads.
-            attn_mask = attn_mask.unsqueeze(1)
+            attn_mask = attn_mask.unsqueeze(-1)
         batch = query.size(0)
 
         # 1) Do all the linear projections in batch from d_model => h x d_k
