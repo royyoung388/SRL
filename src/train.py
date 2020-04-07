@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 import time
 
 import matplotlib.pyplot as plt
@@ -12,6 +13,19 @@ from dataset.datareader import DataReader, Collate
 from dataset.vocab import Vocab
 from model.deepattn import DeepAttn
 from optimizer.optimizer import NoamOpt
+from predict import Predictor
+
+
+def filter(f1_recoder: dict, cur_model: str, args):
+    predictor = Predictor(os.path.join(cur_model, 'model.pt'), args.word_vocab, args.label_vocab,
+                          'data/dev/word.txt', 'data/dev/label.txt')
+    score = predictor.predict()
+    f1_recoder[score] = cur_model
+    if len(f1_recoder) > 10:
+        # remove the worst model
+        key = sorted(f1_recoder.keys(), reverse=True)[-1]
+        path = f1_recoder.pop(key)
+        shutil.rmtree(path)
 
 
 def plot(points, save_path):
@@ -39,7 +53,8 @@ def parse_args():
     parser.add_argument("--label", default='data/train/label.txt', help=msg)
     msg = "output directory path"
     parser.add_argument("--output", default='result', help=msg)
-
+    msg = "load checkpoint"
+    parser.add_argument("--checkpoint", default='result/8/model.pt', help=msg)
     return parser.parse_args()
 
 
@@ -70,12 +85,17 @@ if __name__ == '__main__':
 
     # init model
     model = DeepAttn(word_vocab.size(), label_vocab.size(), feature_dim, model_dim, filter_dim)
+    if args.checkpoint:
+        print('load model: ' + args.checkpoint)
+        model.load_state_dict(torch.load(args.checkpoint))
 
     model.train()
     optimiser = NoamOpt(model_dim, 1, warmup_step,
                         torch.optim.Adam(model.parameters(), lr=0, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
 
     # start train
+    all_loss = []
+    f1_recoder = {}
     start_time = time.time()
     print('start train')
 
@@ -108,4 +128,10 @@ if __name__ == '__main__':
         # plot
         plot(loss_record, os.path.join(save_path, 'loss.png'))
 
+        filter(f1_recoder, save_path, args)
+
+        if epoch % plot_epoch == 0:
+            all_loss.append((epoch, loss_record[-1][1]))
+
+    plot(all_loss, os.path.join(args.output, 'loss.png'))
     print('finish train: %.2f M' % ((time.time() - start_time) / 60.))

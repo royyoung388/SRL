@@ -13,7 +13,7 @@ from model.deepattn import DeepAttn
 
 
 class Predictor(object):
-    def __init__(self, model, word_vocab, label_vocab, word, label):
+    def __init__(self, model_path, word_vocab, label_vocab, word, label):
         # load vocab
         self.word_vocab = Vocab(word_vocab)
         self.label_vocab = Vocab(label_vocab)
@@ -36,7 +36,7 @@ class Predictor(object):
                                      collate_fn=Collate(pred_id, WORD_PAD_ID, LABEL_PAD_ID, False))
 
         self.model = DeepAttn(self.word_vocab.size(), self.label_vocab.size(), feature_dim, model_dim, filter_dim)
-        self.model.load_state_dict(torch.load(model))
+        self.model.load_state_dict(torch.load(model_path))
 
     def save(self, path, labels):
         with open(path, 'a', encoding='utf-8') as f:
@@ -44,7 +44,7 @@ class Predictor(object):
                 f.write(' '.join(label))
                 f.write('\n')
 
-    def predict(self, save_path):
+    def predict(self, save_path=None):
         start = time.time()
         print('start predict')
 
@@ -59,15 +59,15 @@ class Predictor(object):
                 labels = convert_to_string(labels.squeeze().tolist(), self.label_vocab, lengths)
                 y_pred.extend(labels)
 
-                print('predict step: %d, time: %.2f M' % (step, (time.time() - start) / 60))
-                print('current F1 score: %.2f' % f1_score(y_true, y_pred))
+                # print('predict step: %d, time: %.2f M' % (step, (time.time() - start) / 60))
+                # print('current F1 score: %.2f' % f1_score(y_true, y_pred))
 
-            self.save(save_path, y_pred)
+            if save_path:
+                self.save(save_path, y_pred)
 
             score = f1_score(y_true, y_pred)
 
-            print('finish predict: %.2f' % ((time.time() - start) / 60))
-            print('F1 score: %.2f' % score)
+            print('finish predict: %.2f M, F1 score: %.2f' % ((time.time() - start) / 60, score))
             return score
 
 
@@ -90,7 +90,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=msg)
 
     msg = "model path"
-    parser.add_argument("--model", default='result/3/model.pt', help=msg)
+    parser.add_argument("--model", default='result/30/model.pt', help=msg)
     msg = 'word vocab path'
     parser.add_argument("--word_vocab", default='data/train/word_vocab.txt', help=msg)
     msg = 'label vocab path'
