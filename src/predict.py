@@ -56,6 +56,7 @@ class Predictor(object):
                 y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab, lengths))
 
                 labels = self.model.argmax_decode(xs, preds)
+                labels[preds.ne(0)] = self.label_vocab.toID('B-v')
                 labels = convert_to_string(labels.squeeze().tolist(), self.label_vocab, lengths)
                 y_pred.extend(labels)
 

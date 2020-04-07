@@ -32,7 +32,7 @@ layer_num = 4
 # head_num = 2
 # layer_num = 1
 
-epoch = 1000
+epoch = 3
 clipping = 3
 warmup_step = 4000
 adam_beta1 = 0.9

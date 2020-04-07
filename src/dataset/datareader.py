@@ -93,7 +93,7 @@ class Collate:
             seq_lengths, perm_idx = seq_lengths.sort(0, descending=True)
             xs = xs[perm_idx]
             ys = ys[perm_idx]
-        # predicate mask. set to 1 when the label is 'B-v' or 'I-v', else 0
+        # predicate mask. set to 1 when the label is 'B-v', else 0
         preds = torch.LongTensor([[1 if id in self.pred_id else 0 for id in v] for v in ys])
         return xs, preds, ys, seq_lengths
 

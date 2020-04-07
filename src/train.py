@@ -54,7 +54,7 @@ def parse_args():
     msg = "output directory path"
     parser.add_argument("--output", default='result', help=msg)
     msg = "load checkpoint"
-    parser.add_argument("--checkpoint", default='result/8/model.pt', help=msg)
+    parser.add_argument("--checkpoint", default=None, help=msg)
     return parser.parse_args()
 
 
