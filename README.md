@@ -39,8 +39,12 @@ Macro-F1和Micro-F1是相对于多标签分类而言的。
 Micro-F1，计算出所有类别总的Precision和Recall，然后计算F1。  
 Macro-F1，计算出每一个类的Precison和Recall后计算F1，最后将F1平均。
 
-标签类别问题,B-rel
+标签类别问题,B-rel  
 c-argm-TMP / c-arg0 (c表示共指)  
 r-arg0  
 rel 和 v  
 转化成conll数据后，有偏差   
+
+学习率问题  
+45 53 54 55 59 62 64 65 66 83 119  
+0.37  
