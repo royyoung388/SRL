@@ -34,7 +34,7 @@ layer_num = 4
 
 epoch = 3
 clipping = 3
-warmup_step = 4000
+warmup_step = 15
 adam_beta1 = 0.9
 adam_beta2 = 0.999
 adam_epsilon = 1e-8

@@ -132,6 +132,7 @@ if __name__ == '__main__':
 
         if epoch % plot_epoch == 0:
             all_loss.append((epoch, loss_record[-1][1]))
+        plot(all_loss, os.path.join(args.output, 'loss.png'))
 
     plot(all_loss, os.path.join(args.output, 'loss.png'))
     print('finish train: %.2f M' % ((time.time() - start_time) / 60.))
