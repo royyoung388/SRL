@@ -96,7 +96,7 @@ if __name__ == '__main__':
         model.load_state_dict(torch.load(args.checkpoint))
 
     model.train()
-    optimiser = NoamOpt(model_dim, 1, warmup_step,
+    optimiser = NoamOpt(model_dim, factor, warmup_step,
                         torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
     # optimiser = torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2))
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
             if step % plot_step == 0:
                 loss_record.append((step, loss.item()))
-                print("epoch: %d, step: %d, loss: %.3f" % (epoch, step, loss.item()))
+                # print("epoch: %d, step: %d, loss: %.3f" % (epoch, step, loss.item()))
 
         print('finished epoch: %d, time: %.2f M' % (epoch, (time.time() - epoch_time) / 60.))
 

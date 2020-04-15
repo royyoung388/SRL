@@ -35,7 +35,7 @@ layer_num = 4
 # layer_num = 2
 
 lr = 0.0
-clipping = 3
+factor = 4
 warmup_step = 400
 adam_beta1 = 0.9
 adam_beta2 = 0.999
