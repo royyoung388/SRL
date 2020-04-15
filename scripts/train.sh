@@ -1,2 +1,2 @@
 #!/bin/bash
-python ./src/train.py --gpu
+python ./src/train.py --cuda

@@ -22,12 +22,12 @@ batch_size = 2048
 
 # dimensions
 # feature_dim * 2 = model_dim
-# feature_dim = 100
-# model_dim = 200
-# filter_dim = 400
-feature_dim = 16
-model_dim = 32
-filter_dim = 64
+feature_dim = 100
+model_dim = 200
+filter_dim = 400
+# feature_dim = 16
+# model_dim = 32
+# filter_dim = 64
 
 head_num = 8
 layer_num = 4
