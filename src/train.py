@@ -117,6 +117,8 @@ if __name__ == '__main__':
             os.mkdir(save_path)
 
         for step, (xs, preds, ys, lengths) in enumerate(dataLoader):
+            if args.cuda == 'cuda':
+                torch.cuda.empty_cache()
             xs, preds, ys, lengths = xs.to(device), preds.to(device), ys.to(device), lengths.to(device)
             model.zero_grad()
             loss = model(xs, preds, ys)
