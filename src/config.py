@@ -16,7 +16,7 @@ relu_dropout = 0.1
 epoch = 1500
 # subprocesses to use for data loading. = cpu counts
 num_workers = 8
-batch_size = 2048
+batch_size = 256
 # num_workers = 4
 # batch_size = 128
 
@@ -36,6 +36,7 @@ layer_num = 4
 
 lr = 0.0
 factor = 4
+clipping = 2
 warmup_step = 400
 adam_beta1 = 0.9
 adam_beta2 = 0.999

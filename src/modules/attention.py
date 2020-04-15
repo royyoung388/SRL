@@ -67,7 +67,7 @@ class MultiHeadAttention(nn.Module):
         :param query:
         :param key:
         :param value:
-        :param attn_mask: (batch * 1 * seq_len
+        :param attn_mask: (batch * 1 * seq_len)
         :return:
         """
         if attn_mask is not None:
