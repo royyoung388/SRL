@@ -18,7 +18,7 @@ from predict import Predictor
 
 def filter(f1_recoder: dict, cur_model: str, args):
     predictor = Predictor(os.path.join(cur_model, 'model.pt'), args.word_vocab, args.label_vocab,
-                          'data/dev/word.txt', 'data/dev/label.txt', 'gpu')
+                          'data/dev/word.txt', 'data/dev/label.txt', args.cuda)
     score = predictor.predict()
     f1_recoder[score] = cur_model
     if len(f1_recoder) > 10:
@@ -55,8 +55,8 @@ def parse_args():
     parser.add_argument("--output", default='result', help=msg)
     msg = "load checkpoint"
     parser.add_argument("--checkpoint", default=None, help=msg)
-    msg = 'use gpu'
-    parser.add_argument("--gpu", action='store_true', help=msg)
+    msg = 'use cuda'
+    parser.add_argument("--cuda", action='store_const', const='cuda', default='cpu', help=msg)
     return parser.parse_args()
 
 
@@ -76,10 +76,7 @@ if __name__ == '__main__':
     config.LABEL_PAD_ID = label_vocab.toID(PAD)
     pred_id = [label_vocab.toID('B-v')]
 
-    if args.gpu:
-        device = torch.device('cuda')
-    else:
-        device = torch.device('cpu')
+    device = torch.device(args.cuda)
 
     # load data
     dataset = DataReader(args.word, args.label, word_vocab, label_vocab)

@@ -26,10 +26,7 @@ class Predictor(object):
         config.LABEL_PAD_ID = self.label_vocab.toID(PAD)
         pred_id = [self.label_vocab.toID('B-v')]
 
-        if device == 'cpu':
-            self.device = torch.device('cpu')
-        else:
-            self.device = torch.device('cuda')
+        self.device = torch.device(device)
 
         # load data
         dataset = DataReader(word, label, self.word_vocab, self.label_vocab)
@@ -59,7 +56,8 @@ class Predictor(object):
             y_pred = []
             y_true = []
             for step, (xs, preds, ys, lengths) in enumerate(self.dataLoader):
-                xs, preds, ys, lengths = xs.to(self.device), preds.to(self.device), ys.to(self.device), lengths.to(self.device)
+                xs, preds, ys, lengths = xs.to(self.device), preds.to(self.device), ys.to(self.device), lengths.to(
+                    self.device)
 
                 y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab, lengths))
 
@@ -110,14 +108,13 @@ def parse_args():
     parser.add_argument("--label", default='data/dev/label.txt', help=msg)
     msg = 'label output path'
     parser.add_argument("--output", default='data/dev/label_out.txt', help=msg)
-    msg = 'use gpu'
-    parser.add_argument("--gpu", action='store_true', help=msg)
+    msg = 'use cuda'
+    parser.add_argument("--cuda", action='store_const', const='cuda', default='cpu', help=msg)
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
 
-    predictor = Predictor(args.model, args.word_vocab, args.label_vocab, args.word, args.label,
-                          'cuda' if args.gpu else 'cpu')
+    predictor = Predictor(args.model, args.word_vocab, args.label_vocab, args.word, args.label, args.cuda)
     predictor.predict(args.output)
