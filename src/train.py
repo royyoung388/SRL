@@ -18,7 +18,7 @@ from predict import Predictor
 
 def filter(f1_recoder: dict, cur_model: str, args):
     predictor = Predictor(os.path.join(cur_model, 'model.pt'), args.word_vocab, args.label_vocab,
-                          'data/dev/word.txt', 'data/dev/label.txt')
+                          'data/dev/word.txt', 'data/dev/label.txt', 'gpu')
     score = predictor.predict()
     f1_recoder[score] = cur_model
     if len(f1_recoder) > 10:
@@ -55,6 +55,8 @@ def parse_args():
     parser.add_argument("--output", default='result', help=msg)
     msg = "load checkpoint"
     parser.add_argument("--checkpoint", default=None, help=msg)
+    msg = 'use gpu'
+    parser.add_argument("--gpu", action='store_true', help=msg)
     return parser.parse_args()
 
 
@@ -74,6 +76,11 @@ if __name__ == '__main__':
     config.LABEL_PAD_ID = label_vocab.toID(PAD)
     pred_id = [label_vocab.toID('B-v')]
 
+    if args.gpu:
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
+
     # load data
     dataset = DataReader(args.word, args.label, word_vocab, label_vocab)
     dataLoader = DataLoader(dataset=dataset,
@@ -85,13 +92,16 @@ if __name__ == '__main__':
 
     # init model
     model = DeepAttn(word_vocab.size(), label_vocab.size(), feature_dim, model_dim, filter_dim)
+    model.to(device)
+
     if args.checkpoint:
         print('load model: ' + args.checkpoint)
         model.load_state_dict(torch.load(args.checkpoint))
 
     model.train()
     optimiser = NoamOpt(model_dim, 1, warmup_step,
-                        torch.optim.Adam(model.parameters(), lr=0, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
+                        torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
+    # optimiser = torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2))
 
     # start train
     all_loss = []
@@ -110,6 +120,7 @@ if __name__ == '__main__':
             os.mkdir(save_path)
 
         for step, (xs, preds, ys, lengths) in enumerate(dataLoader):
+            xs, preds, ys, lengths = xs.to(device), preds.to(device), ys.to(device), lengths.to(device)
             model.zero_grad()
             loss = model(xs, preds, ys)
             loss.backward()

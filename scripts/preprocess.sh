@@ -12,9 +12,9 @@ python $ROOTPATH/src/preprocess/process_conll2012.py --trial 1 --subword --lowca
 #python $ROOTPATH/src/preprocess/process_conll2012.py --subword --lowcase $DEV $ROOTPATH/data/dev
 #python $ROOTPATH/src/preprocess/process_conll2012.py --subword --lowcase --test $TEST $ROOTPATH/data/test
 
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" $ROOTPATH/data/train/word.txt $ROOTPATH/data/train/word_vocab.txt
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" $ROOTPATH/data/dev/word.txt $ROOTPATH/data/dev/word_vocab.txt
-python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" $ROOTPATH/data/test/word.txt $ROOTPATH/data/test/word_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 $ROOTPATH/data/train/word.txt $ROOTPATH/data/train/word_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 $ROOTPATH/data/dev/word.txt $ROOTPATH/data/dev/word_vocab.txt
+python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>:<unk>" --limit 5 $ROOTPATH/data/test/word.txt $ROOTPATH/data/test/word_vocab.txt
 
 python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" $ROOTPATH/data/train/label.txt $ROOTPATH/data/train/label_vocab.txt
 python $ROOTPATH/src/preprocess/buildvocab.py --special "<pad>" $ROOTPATH/data/dev/label.txt $ROOTPATH/data/dev/label_vocab.txt

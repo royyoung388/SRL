@@ -46,7 +46,7 @@ def pad_tensor(vec, pad, pad_id):
     return:
         a new tensor padded to 'pad'
     """
-    return torch.cat([vec, torch.full([pad - len(vec)], pad_id, dtype=torch.long)], dim=0).data.numpy()
+    return torch.cat([vec, torch.full([pad - len(vec)], pad_id, dtype=torch.long)], dim=0).data.cpu().numpy()
 
 
 class Collate:

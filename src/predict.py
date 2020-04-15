@@ -13,7 +13,7 @@ from model.deepattn import DeepAttn
 
 
 class Predictor(object):
-    def __init__(self, model_path, word_vocab, label_vocab, word, label):
+    def __init__(self, model_path, word_vocab, label_vocab, word, label, device='cpu'):
         # load vocab
         self.word_vocab = Vocab(word_vocab)
         self.label_vocab = Vocab(label_vocab)
@@ -26,17 +26,23 @@ class Predictor(object):
         config.LABEL_PAD_ID = self.label_vocab.toID(PAD)
         pred_id = [self.label_vocab.toID('B-v')]
 
+        if device == 'cpu':
+            self.device = torch.device('cpu')
+        else:
+            self.device = torch.device('cuda')
+
         # load data
         dataset = DataReader(word, label, self.word_vocab, self.label_vocab)
         self.dataLoader = DataLoader(dataset=dataset,
                                      batch_size=batch_size,
                                      num_workers=num_workers,
-                                     pin_memory=True,
+                                     # pin_memory=True,
                                      shuffle=False,
                                      collate_fn=Collate(pred_id, WORD_PAD_ID, LABEL_PAD_ID, False))
 
         self.model = DeepAttn(self.word_vocab.size(), self.label_vocab.size(), feature_dim, model_dim, filter_dim)
         self.model.load_state_dict(torch.load(model_path))
+        self.model.to(self.device)
 
     def save(self, path, labels):
         with open(path, 'a', encoding='utf-8') as f:
@@ -53,6 +59,8 @@ class Predictor(object):
             y_pred = []
             y_true = []
             for step, (xs, preds, ys, lengths) in enumerate(self.dataLoader):
+                xs, preds, ys, lengths = xs.to(self.device), preds.to(self.device), ys.to(self.device), lengths.to(self.device)
+
                 y_true.extend(convert_to_string(ys.squeeze().tolist(), self.label_vocab, lengths))
 
                 labels = self.model.argmax_decode(xs, preds)
@@ -91,7 +99,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=msg)
 
     msg = "model path"
-    parser.add_argument("--model", default='result/30/model.pt', help=msg)
+    parser.add_argument("--model", default='result/first/83/model.pt', help=msg)
     msg = 'word vocab path'
     parser.add_argument("--word_vocab", default='data/train/word_vocab.txt', help=msg)
     msg = 'label vocab path'
@@ -102,11 +110,14 @@ def parse_args():
     parser.add_argument("--label", default='data/dev/label.txt', help=msg)
     msg = 'label output path'
     parser.add_argument("--output", default='data/dev/label_out.txt', help=msg)
+    msg = 'use gpu'
+    parser.add_argument("--gpu", action='store_true', help=msg)
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
 
-    predictor = Predictor(args.model, args.word_vocab, args.label_vocab, args.word, args.label)
+    predictor = Predictor(args.model, args.word_vocab, args.label_vocab, args.word, args.label,
+                          'cuda' if args.gpu else 'cpu')
     predictor.predict(args.output)
