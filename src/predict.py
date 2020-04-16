@@ -38,7 +38,7 @@ class Predictor(object):
                                      collate_fn=Collate(pred_id, WORD_PAD_ID, LABEL_PAD_ID, False))
 
         self.model = DeepAttn(self.word_vocab.size(), self.label_vocab.size(), feature_dim, model_dim, filter_dim)
-        self.model.load_state_dict(torch.load(model_path))
+        self.model.load_state_dict(torch.load(model_path, map_location=device))
         self.model.to(self.device)
 
     def save(self, path, labels):
