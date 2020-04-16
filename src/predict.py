@@ -49,7 +49,7 @@ class Predictor(object):
 
     def predict(self, save_path=None):
         start = time.time()
-        print('start predict')
+        # print('start predict')
 
         self.model.eval()
         with torch.no_grad():

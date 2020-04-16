@@ -13,9 +13,9 @@ attention_dropout = 0.1
 relu_dropout = 0.1
 
 # train
-epoch = 1500
+epoch = 1000
 # subprocesses to use for data loading. = cpu counts
-num_workers = 8
+num_workers = 16
 batch_size = 256
 # num_workers = 4
 # batch_size = 128
@@ -34,7 +34,7 @@ layer_num = 4
 # head_num = 4
 # layer_num = 2
 
-lr = 0.0
+lr = 0.02
 factor = 4
 clipping = 2
 warmup_step = 400

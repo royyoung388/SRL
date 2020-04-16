@@ -12,7 +12,6 @@ from config import *
 from dataset.datareader import DataReader, Collate
 from dataset.vocab import Vocab
 from model.deepattn import DeepAttn
-from optimizer.optimizer import NoamOpt
 from predict import Predictor
 
 
@@ -96,9 +95,9 @@ if __name__ == '__main__':
         model.load_state_dict(torch.load(args.checkpoint))
 
     model.train()
-    optimiser = NoamOpt(model_dim, factor, warmup_step,
-                        torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
-    # optimiser = torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2))
+    # optimiser = NoamOpt(model_dim, factor, warmup_step,
+    #                     torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2), eps=adam_epsilon))
+    optimiser = torch.optim.Adam(model.parameters(), lr=lr, betas=(adam_beta1, adam_beta2), eps=adam_epsilon)
 
     # start train
     all_loss = []
@@ -130,7 +129,7 @@ if __name__ == '__main__':
                 loss_record.append((step, loss.item()))
                 # print("epoch: %d, step: %d, loss: %.3f" % (epoch, step, loss.item()))
 
-        print('finished epoch: %d, time: %.2f M' % (epoch, (time.time() - epoch_time) / 60.))
+        print('finished epoch: %d, time: %.2f M, loss: %.2f' % (epoch, (time.time() - epoch_time) / 60., loss_record[-1][1]))
 
         # save model
         torch.save(model.state_dict(), os.path.join(save_path, 'model.pt'))
