@@ -17,7 +17,7 @@ epoch = 1000
 # subprocesses to use for data loading. = cpu counts
 num_workers = 16
 batch_size = 256
-# num_workers = 4
+# num_workers = 0
 # batch_size = 128
 
 # dimensions
@@ -37,7 +37,7 @@ layer_num = 4
 lr = 0.02
 factor = 4
 clipping = 2
-warmup_step = 400
+warmup_step = 500
 adam_beta1 = 0.9
 adam_beta2 = 0.999
 adam_epsilon = 1e-8

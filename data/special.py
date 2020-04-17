@@ -60,4 +60,4 @@ if __name__ == '__main__':
     # find('rel', 'E:/SRL/conll-2012/v9/data/test/data/chinese')
     # compare_label('train/label_vocab.txt', 'test/label_vocab.txt')
     # compare_label('train/label_vocab.txt', 'dev/label_vocab.txt')
-    compare_length('dev/label.txt', 'dev/label_out.txt')
+    compare_length('dev/label.txt', 'dev/label_outphjm*.txt')

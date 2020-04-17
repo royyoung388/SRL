@@ -97,7 +97,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=msg)
 
     msg = "model path"
-    parser.add_argument("--model", default='result/first/83/model.pt', help=msg)
+    parser.add_argument("--model", help=msg)
     msg = 'word vocab path'
     parser.add_argument("--word_vocab", default='data/train/word_vocab.txt', help=msg)
     msg = 'label vocab path'
